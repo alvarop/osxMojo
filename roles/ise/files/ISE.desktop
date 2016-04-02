@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Icon=/vagrant/opt/Xilinx/14.7/ISE_DS/ISE/data/images/pn-ise.png
+Name=ISE
+Comment=Run Xilinx ISE
+Categories=Development
+Exec=/vagrant/roles/ise/files/run_ise.sh
+StartupNotify=true
+Terminal=false

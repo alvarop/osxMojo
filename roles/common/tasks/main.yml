@@ -1,0 +1,17 @@
+- name: update apt cache
+  apt: update_cache=yes
+
+- name: Install xfce4
+  apt: name=xfce4 state=latest
+
+- name: allow any user to startx
+  replace: dest=/etc/X11/Xwrapper.config regexp='allowed_users=.*$' replace='allowed_users=anybody' backup=yes
+
+- name: create Desktop directory in case it's not there yet
+  file: path=/home/vagrant/Desktop state=directory mode=0755 owner=vagrant group=vagrant
+
+- name: copy default .profile to auto startx
+  copy: src=roles/common/files/.profile dest=/home/vagrant backup=yes force=yes
+
+- name: copy default xsettings.xml
+  copy: src=roles/common/files/xsettings.xml dest=/home/vagrant/.config/xfce4/xfconf/xfce-perchannel-xml/ backup=yes force=yes owner=vagrant group=vagrant

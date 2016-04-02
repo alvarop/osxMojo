@@ -1,0 +1,14 @@
+- name: copy ise run desktop launcher
+  copy: src=roles/ise/files/ISE.desktop dest=/home/vagrant/Desktop/ owner=vagrant group=vagrant
+
+- name: create ~/.Xilinx directory in case it's not there yet
+  file: path=/home/vagrant/.Xilinx state=directory mode=0755 owner=vagrant group=vagrant
+  
+- name: copy local Xilinx.lic to remote if exists
+  local_action: stat path=roles/ise/files/Xilinx.lic
+  register: result  
+  sudo: false
+
+- name: copy Xlinix license file
+  copy: src=roles/ise/files/Xilinx.lic dest=/home/vagrant/.Xilinx/ owner=vagrant group=vagrant
+  when: result.stat.exists == True
