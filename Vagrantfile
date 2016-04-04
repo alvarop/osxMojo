@@ -10,33 +10,32 @@ Vagrant.configure(2) do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://atlas.hashicorp.com/search.
-  # config.vm.box = "ubuntu/trusty64"
-  config.vm.box = "hashicorp/precise64"
+  # config.vm.box = "ubuntu/trusty64"  # This one doesn't seem to have CDC_ACM module :(
+  config.vm.box = "hashicorp/precise64"  # Going with older one because it has serial drivers
 
-  config.vm.hostname = "vagranttest"
-
-  config.vm.provider "virtualbox" do |vb|
-    # Display the VirtualBox GUI when booting the machine
-    vb.gui = true
-  end
+  config.vm.hostname = "osxMojo"
 
   # Add usb filter to attach mojo v3
- config.vm.provider :virtualbox do |vb|
-   vb.customize ['modifyvm', :id, '--usb', 'on']
-   vb.customize ['usbfilter', 'add', '0', '--target', :id, '--name', 'Mojo V3', '--vendorid', '0x29dd', '--productid', '0x8001']
-   vb.customize ['usbfilter', 'add', '0', '--target', :id, '--name', 'Mojo V3 Bootloader', '--vendorid', '0x29dd', '--productid', '0x0001']
- end
+  config.vm.provider :virtualbox do |v|
 
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  # config.vm.network "forwarded_port", guest: 4000, host: 4000, auto_correct: true
+    # We need a gui for the Xilinx tools
+    v.gui = true
 
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
-  # documentation for more information about their specific syntax and use.
+    # Set how much memory and CPU cores to use
+    v.memory = 2048
+    v.cpus = 2
+
+    # Give it some more video memory, since it's running a gui
+    v.customize ["modifyvm", :id, "--vram", "32"]
+
+    # Enable USB
+    v.customize ['modifyvm', :id, '--usb', 'on']
+
+    # Enable usb pass-through Mojo V3 and Mojo V3 Bootloader
+    v.customize ['usbfilter', 'add', '0', '--target', :id, '--name', 'Mojo V3', '--vendorid', '0x29dd', '--productid', '0x8001']
+    v.customize ['usbfilter', 'add', '0', '--target', :id, '--name', 'Mojo V3 Bootloader', '--vendorid', '0x29dd', '--productid', '0x0001']
+  end
+
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "_playbook.yml"
   end
