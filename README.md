@@ -2,6 +2,8 @@
 
 osxMojo is a full development environment for the Mojo v3 development board (https://embeddedmicro.com/products/mojo-v3.html)
 
+**NOTE:** For much more detailed instructions (and pictures!) check out my post here: http://alvarop.com/2016/04/mojo-v3-osx
+
 ## Installation
 
 ### Requirements
